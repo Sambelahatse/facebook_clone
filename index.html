@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Clone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --fb-blue: #1877f2;
+            --fb-green: #42b72a;
+            --fb-bg: #f0f2f5;
+            --fb-post-bg: #ffffff;
+        }
+        
+        body {
+            background-color: var(--fb-bg);
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--fb-blue) !important;
+            font-size: 2rem;
+        }
+        
+        .search-box {
+            background-color: #f0f2f5;
+            border-radius: 50px;
+            border: none;
+            padding: 8px 15px;
+        }
+        
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e4e6eb;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        
+        .icon-container:hover {
+            background-color: #d8dadf;
+        }
+        
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .left-sidebar {
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            width: 360px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #e4e6e9;
+        }
+        
+        .sidebar-item i {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e4e6eb;
+            border-radius: 50%;
+            margin-right: 10px;
+            color: var(--fb-blue);
+        }
+        
+        .story-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+        
+        .story {
+            min-width: 120px;
+            height: 200px;
+            border-radius: 10px;
+            margin-right: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .story-avatar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            border: 3px solid var(--fb-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .story-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .story-user {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+        
+        .create-story {
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .create-story i {
+            font-size: 2rem;
+            color: var(--fb-blue);
+            margin-bottom: 10px;
+        }
+        
+        .post-container {
+            background-color: var(--fb-post-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .post-options {
+            margin-left: auto;
+            cursor: pointer;
+        }
+        
+        .post-content {
+            margin-bottom: 15px;
+        }
+        
+        .post-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+        
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .post-action {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .post-action:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .post-action i {
+            margin-right: 5px;
+            color: #65676b;
+        }
+        
+        .right-sidebar {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            bottom: 0;
+            width: 360px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .sponsored-item {
+            display: flex;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        
+        .sponsored-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .birthday-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .birthday-icon {
+            color: var(--fb-blue);
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        
+        .contact-item:hover {
+            background-color: #f0f2f5;
+            border-radius: 5px;
+        }
+        
+        .online-badge {
+            width: 10px;
+            height: 10px;
+            background-color: var(--fb-green);
+            border-radius: 50%;
+            border: 2px solid white;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+        
+        .avatar-container {
+            position: relative;
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 1200px) {
+            .left-sidebar, .right-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fab fa-facebook me-2"></i>
+            </a>
+            
+            <div class="d-flex align-items-center">
+                <div class="input-group rounded-pill">
+                    <span class="input-group-text bg-transparent border-0"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control search-box" placeholder="Rechercher sur Facebook">
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center ms-auto">
+                <div class="icon-container">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center ms-3">
+                <div class="icon-container me-2">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="icon-container me-2">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div class="icon-container">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5 pt-3">
+        <div class="row">
+            <!-- Left Sidebar -->
+            <div class="col-md-3 left-sidebar d-none d-xl-block">
+                <div class="sidebar-item">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic me-2">
+                    <span>John Doe</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Amis</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-history"></i>
+                    <span>Mémoire</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Enregistré</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-flag"></i>
+                    <span>Pages</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Évènements</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    <span>Groupes</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-video"></i>
+                    <span>Watch</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Marketplace</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Fonds</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Voir plus</span>
+                </div>
+            </div>
+            
+            <!-- Main Feed -->
+            <div class="col-md-6">
+                <!-- Stories -->
+                <div class="story-container">
+                    <div class="story create-story">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Créer une story</span>
+                    </div>
+                    
+                    <div class="story">
+                        <img src="https://source.unsplash.com/random/300x400" alt="Story" class="story-bg">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="story-avatar">
+                        <span class="story-user">Sophie Martin</span>
+                    </div>
+                    
+                    <div class="story">
+                        <img src="https://source.unsplash.com/random/300x401" alt="Story" class="story-bg">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="story-avatar">
+                        <span class="story-user">Pierre Dupont</span>
+                    </div>
+                    
+                    <div class="story">
+                        <img src="https://source.unsplash.com/random/300x402" alt="Story" class="story-bg">
+                        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="User" class="story-avatar">
+                        <span class="story-user">Marie Lambert</span>
+                    </div>
+                    
+                    <div class="story">
+                        <img src="https://source.unsplash.com/random/300x403" alt="Story" class="story-bg">
+                        <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="User" class="story-avatar">
+                        <span class="story-user">Thomas Leroy</span>
+                    </div>
+                </div>
+                
+                <!-- Create Post -->
+                <div class="post-container mt-3">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic me-2">
+                        <input type="text" class="form-control rounded-pill" placeholder="Quoi de neuf, John ?" onclick="showPostModal()">
+                    </div>
+                    <div class="d-flex justify-content-between mt-3 pt-2 border-top">
+                        <button class="btn btn-light flex-grow-1 mx-1">
+                            <i class="fas fa-video text-danger me-2"></i> Vidéo en direct
+                        </button>
+                        <button class="btn btn-light flex-grow-1 mx-1">
+                            <i class="fas fa-images text-success me-2"></i> Photo/vidéo
+                        </button>
+                        <button class="btn btn-light flex-grow-1 mx-1">
+                            <i class="fas fa-smile text-warning me-2"></i> Humeur/activité
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Posts -->
+                <div class="post-container">
+                    <div class="post-header">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="post-avatar">
+                        <div>
+                            <h6 class="mb-0">Sophie Martin</h6>
+                            <small class="text-muted">Il y a 2 heures <i class="fas fa-globe-europe"></i></small>
+                        </div>
+                        <div class="post-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Super journée à la plage aujourd'hui ! ☀️🏖️ #été #vacances</p>
+                    </div>
+                    <img src="https://source.unsplash.com/random/800x600" alt="Post" class="post-image">
+                    <div class="post-stats">
+                        <span><i class="fas fa-thumbs-up"></i> 124</span>
+                        <span>32 commentaires · 5 partages</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>J'aime</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="far fa-comment"></i>
+                            <span>Commenter</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Partager</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="post-container">
+                    <div class="post-header">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Profile" class="post-avatar">
+                        <div>
+                            <h6 class="mb-0">Pierre Dupont</h6>
+                            <small class="text-muted">Hier à 18:30 <i class="fas fa-user-friends"></i></small>
+                        </div>
+                        <div class="post-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Juste partagé un nouvel article sur les dernières tendances technologiques. Qu'en pensez-vous ?</p>
+                        <div class="card mt-2">
+                            <img src="https://source.unsplash.com/random/800x400" class="card-img-top" alt="Article">
+                            <div class="card-body">
+                                <h5 class="card-title">Les 10 tendances tech à surveiller en 2023</h5>
+                                <p class="card-text text-muted">tech-news.com</p>
+                                <p class="card-text">Découvrez les innovations qui vont façonner notre avenir numérique.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-stats">
+                        <span><i class="fas fa-thumbs-up"></i> 89</span>
+                        <span>14 commentaires · 2 partages</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>J'aime</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="far fa-comment"></i>
+                            <span>Commenter</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Partager</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Sidebar -->
+            <div class="col-md-3 right-sidebar d-none d-xl-block">
+                <div class="mb-4">
+                    <h6>Sponsorisé</h6>
+                    <div class="sponsored-item">
+                        <img src="https://source.unsplash.com/random/200x200" alt="Ad" class="sponsored-img">
+                        <div>
+                            <h6 class="mb-1">Nouvelle collection été</h6>
+                            <small class="text-muted">fashionstore.com</small>
+                        </div>
+                    </div>
+                    <div class="sponsored-item">
+                        <img src="https://source.unsplash.com/random/200x201" alt="Ad" class="sponsored-img">
+                        <div>
+                            <h6 class="mb-1">Voyagez avec nous</h6>
+                            <small class="text-muted">travelagency.com</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">Contacts</h6>
+                        <div>
+                            <i class="fas fa-video me-3 text-muted"></i>
+                            <i class="fas fa-search text-muted"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Profile" class="profile-pic">
+                            <div class="online-badge"></div>
+                        </div>
+                        <span>Marie Lambert</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Profile" class="profile-pic">
+                            <div class="online-badge"></div>
+                        </div>
+                        <span>Thomas Leroy</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Profile" class="profile-pic">
+                        </div>
+                        <span>Julie Bernard</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Profile" class="profile-pic">
+                        </div>
+                        <span>David Moreau</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Profile" class="profile-pic">
+                            <div class="online-badge"></div>
+                        </div>
+                        <span>Sarah Petit</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>Conversations de groupe</h6>
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/women/66.jpg" alt="Profile" class="profile-pic">
+                        </div>
+                        <span>Week-end à la montagne</span>
+                    </div>
+                    <div class="contact-item">
+                        <div class="avatar-container">
+                            <img src="https://randomuser.me/api/portraits/men/77.jpg" alt="Profile" class="profile-pic">
+                        </div>
+                        <span>Projet travail</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Créer une publication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic me-2">
+                        <div>
+                            <h6 class="mb-0">John Doe</h6>
+                            <select class="form-select form-select-sm mt-1" style="width: auto; display: inline-block;">
+                                <option><i class="fas fa-globe-europe"></i> Public</option>
+                                <option><i class="fas fa-user-friends"></i> Amis</option>
+                                <option><i class="fas fa-lock"></i> Privé</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea class="form-control border-0" rows="5" placeholder="Quoi de neuf, John ?"></textarea>
+                    <div class="bg-light p-3 rounded mt-2">
+                        <div class="d-flex justify-content-between">
+                            <span>Ajouter à votre publication</span>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <button class="btn btn-light rounded-circle me-2"><i class="fas fa-images text-success"></i></button>
+                            <button class="btn btn-light rounded-circle me-2"><i class="fas fa-user-tag text-primary"></i></button>
+                            <button class="btn btn-light rounded-circle me-2"><i class="fas fa-smile text-warning"></i></button>
+                            <button class="btn btn-light rounded-circle me-2"><i class="fas fa-map-marker-alt text-danger"></i></button>
+                            <button class="btn btn-light rounded-circle me-2"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary w-100" disabled>Publier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple JavaScript for the demo
+        function showPostModal() {
+            var postModal = new bootstrap.Modal(document.getElementById('postModal'));
+            postModal.show();
+        }
+        
+        // Like button functionality
+        document.querySelectorAll('.post-action').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.querySelector('i').classList.contains('fa-thumbs-up')) {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        icon.style.color = '#1877f2';
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        icon.style.color = '';
+                    }
+                }
+            });
+        });
+        
+        // Mobile responsive adjustments
+        function checkScreenSize() {
+            if (window.innerWidth < 1200) {
+                document.querySelector('.navbar-brand i').classList.add('d-none');
+            } else {
+                document.querySelector('.navbar-brand i').classList.remove('d-none');
+            }
+        }
+        
+        window.addEventListener('resize', checkScreenSize);
+        checkScreenSize();
+    </script>
+</body>
+</html>
